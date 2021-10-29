@@ -4,18 +4,20 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib src/library.js",
+    "build": "vue-cli-service build --target lib --formats umd-min --name 'PluginExample.[chunkhash]' --no-clean src/library.js",
+    "build-dashboard": "vue-cli-service build --target lib --formats umd-min --name 'PluginExample.Dashboard' --no-clean src/components/Dashboard.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@paciolan/remote-module-loader": "^2.6.2",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "webpack-external-import": "^2.2.4"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.15",
+    "@vue/cli-plugin-eslint": "~4.5.15",
+    "@vue/cli-service": "~4.5.15",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
