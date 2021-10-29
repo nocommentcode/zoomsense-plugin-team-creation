@@ -1,0 +1,25 @@
+{
+  "name": "zoomsense-plugin-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/action-lab-aus/intake-24/zoomsense-plugin-example.git"
+  },
+  "author": "ZoomSense",
+  "license": "MIT",
+  "zoomsense": {
+    "displayname": "",
+    "requires": {
+      "sensor": "1.0",
+      "functions": "1.0",
+      "plugins": {
+        "UIDisplauy": "1.0"
+      }
+    }
+  }
+}
