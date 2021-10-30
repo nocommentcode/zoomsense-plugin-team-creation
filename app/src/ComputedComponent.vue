@@ -28,10 +28,10 @@ export default {
       handler(newComponent, prevComponent = "") {
         if (newComponent.url === prevComponent.url) return;
 
-        console.log(`http://localhost:5000/${this.component.url}`);
+        console.log(`${this.component.url}`);
 
         this.computedComponent = () =>
-          externalComponent(`http://localhost:5000/${this.component.url}`);
+          externalComponent(`${this.component.url}`);
       },
     },
   },

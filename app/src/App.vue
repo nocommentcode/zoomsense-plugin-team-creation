@@ -31,7 +31,9 @@ export default {
     return {
       loaddash: {
         "plugin-example": {
-          url: "dist/PluginExample.Dashboard.umd.min.js",
+          // https://zsplugins.actionlab.dev
+
+          url: "https://action-lab-aus.gitlab.io/zoomsense/zoomsense-plugin-directory/MyNewPlugin/main/MyNewPlugin.Dashboard.umd.min.js",
         },
       },
       dashcontrols: [],
