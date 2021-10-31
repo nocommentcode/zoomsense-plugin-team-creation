@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "npx serve && vue-cli-service serve",
     "build": "vue-cli-service build --target lib --formats commonjs --name 'PluginExample' --no-clean src/library.js",
-    "build-dashboard": "vue-cli-service build --target lib --formats umd-min --name 'PluginExample.Dashboard' --no-clean src/components/Dashboard.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -24,7 +23,8 @@
     "import-http": "0.3.1",
     "vue-template-compiler": "^2.6.11",
     "vuefire": "^2.2.5",
-    "firebase": "8.10.0"
+    "firebase": "8.10.0",
+    "serve": "12.0.1"
   },
   "eslintConfig": {
     "ignorePatterns": [

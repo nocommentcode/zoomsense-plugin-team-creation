@@ -1,26 +1,39 @@
 <template>
   <div id="app">
-    <div v-for="(control, index) in dashcontrols" :key="index">
-      <Component :is="control"></Component>
-      <!-- <ComputedComponent :component="control"></ComputedComponent> -->
+    <h1>Dashboard</h1>
+    <div v-for="(control, index) in uilibs" :key="index">
+      <ComputedComponent
+        :component="control"
+        type="Dashboard"
+        :firebase="firebase"
+      ></ComputedComponent>
     </div>
+    <h1>Overlay</h1>
+    <div v-for="(control, index) in uilibs" :key="index">
+      <ComputedComponent
+        :component="control"
+        type="Overlay"
+        :firebase="firebase"
+      ></ComputedComponent>
+    </div>
+
     <!-- <Dashboard /> -->
     <!-- <Overlay /> -->
   </div>
 </template>
 
 <script>
-// import { Dashboard } from "../../app/dist/app.common";
-// import Overlay from "./components/Overlay.vue";
 import ComputedComponent from "./ComputedComponent.vue";
-// import Vue from "vue";
 
-// import createLoadRemoteModule from "@paciolan/remote-module-loader";
-import loadRemoteModule from "@paciolan/remote-module-loader";
+// Get a RTDB instance
+import firebase from "firebase/app";
+import "firebase/database";
 
-// import { corsImport } from "webpack-external-import";
-
-// import externalComponent from "./externalComponent";
+export const db = firebase
+  .initializeApp({
+    databaseURL: "https://zoomsense-plugin-default-rtdb.firebaseio.com/",
+  })
+  .database();
 
 export default {
   name: "App",
@@ -31,64 +44,14 @@ export default {
   },
   data: () => {
     return {
-      loaddash: {
+      firebase: db,
+      uilibs: {
         "plugin-example": {
-          // https://zsplugins.actionlab.dev
-
           // url: "https://action-lab-aus.gitlab.io/zoomsense/zoomsense-plugin-directory/MyNewPlugin/main/MyNewPlugin.Dashboard.umd.min.js",
-          url: "http://localhost:5000/dist/PluginExample.Dashboard.common.js",
+          url: "http://localhost:5000/dist/PluginExample.common.js",
         },
       },
-      dashcontrols: [],
-      overlaycontrols: [],
     };
-  },
-  async created() {
-    // console.log(this.$options.components);
-    //dynamically load the controls:
-    // console.log(Dashboard);
-    // const componentName = fileName
-    //   .split("/")
-    //   .pop()
-    //   .split(".")[0];
-    // register the component locally
-    for (let key in this.loaddash) {
-      //   console.log(key);
-      //   //ISSUE HERE SEEMS TO BE THAT WEBPACK CAN ONLY IMPORT MODULES using IMPORT, and THE LIBRARY IS ACTUALLY BUNDLED AS A COMMONJS MODULE.
-      //   console.log(`Loading from http://localhost:5000/${this.loaddash[key]}`);
-      // import(
-      //   /* webpackIgnore: true */
-      //   `http://localhost:5000/${this.loaddash[key]}`
-      // ).then(() => {
-      //   someFunction();
-      // });
-      // let Imported = await import(
-      //   /* webpackIgnore: true */
-      //   `${this.loaddash[key]}`
-      // );
-      // const loadRemoteModule = createLoadRemoteModule();
-      // console.log(loadRemoteModule);
-      // console.log(`${this.loaddash[key]}`);
-      const Imported = await loadRemoteModule()(`${this.loaddash[key].url}`);
-      // let Dashboard = new Imported();
-      // let { Dashboard } = require.context(
-      //   // The relative path of the components folder
-      //   `http://localhost:5000/${this.loaddash[key]}`,
-      //   // Whether or not to look in subfolders
-      //   false,
-      //   // The regular expression used to match base component filenames
-      //   /[A-Z]w+.(vue|js)$/
-      // );
-      // const Imported = () =>
-      //   externalComponent(`http://localhost:5000/${this.loaddash[key]}`);
-      // this.dashcontrols.push(Imported);
-      // console.log(Imported());
-      // this.$options.components[key] = Imported();
-      // console.log(this.$options.components);
-      console.log(Imported);
-
-      this.dashcontrols.push(Imported.Dashboard);
-    }
   },
 };
 </script>
