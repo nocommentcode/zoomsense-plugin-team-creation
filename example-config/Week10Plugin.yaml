@@ -4,144 +4,186 @@ schedule:
   global:
     # This Plugin Runs a generic/basic Dialog Engine on all chats
     - plugin: Dialogue
+    - plugin: Active Speakers
   script:
-    - name: "Activity One: Round Robin Communication"
+    - name: "Activity One: A - Read Research Papers"
       advance:
         type: manual
       plugins:
         - plugin: Breakout Room Organisation
           settings:
-            sections:
-              - type: random
-                # Consider: We need to make sure that there are an even number of rooms somehow
-                participant_count: 4
-                start_hooks:
-                  # Distributes all of the google docs for this script section
-                  - name: Distribute Google Docs
-                messages:
-                  - minute: 0
-                    content: Read the abstract and conclusion. You will need to communicate this to other people in 90 seconds
-              - type: transition
-                transition: pairs_rotation
-                start_hooks:
-                  # This sends a message to the groups telling one pair member to explain their document
-                  - name: Pair explain document
-              - type: transition
-                transition: pairs_rotation
-              - type: transition
-                # This puts students back in their original rooms for this script section
-                transition: initial_rooms
-                # This allows us to capture strategies only for this breakout room
-                start_hooks:
-                  - name: Enable Chat Submission
-                messages:
-                  - minute: 0
-                    content: Discuss the activity. Did your message get communicated back to you clearly? If not, what went wrong? If it did then what ensured this happened? How can you ensure that the important information sticks with people when you explain something to them?
-                  # The original doc doesn't say when to do this, so I have set it to 5 mins after previous message
-                  - minute: 5
-                    content: 'What strategies did you use to ensure your communication was effective? (Respond to me in the chat by typing: "Strategy: [the_strategy]")'
-                  - minute: 6
-                    content: 'What was a strategy you saw someone else use to ensure their communication was effective? (Respond to me in the chat: "Strategy: [the_strategy]")'
-        - plugin: Google Docs
+            type: random
+            # What will this actually look like? We don't know how many students we will have,
+            # we only know that we need the same number of breakout rooms as we have research
+            # papers
+            room_count: 2
+        - plugin: Prompt
           settings:
-            docs:
-              - id: path/to/research_paper_one
-                name: The Name
-              - path/to/research_paper_two
-        - plugin: Chat Submission
+            prompts:
+              - name: Distribute Papers
+                content: Please read the abstract and conclusion of this paper: [Link to paper...]
+                # The teacher will click the button in the UI to distribute the papers once the
+                # students have settled into their breakout rooms.
+                #
+                # The alternative here might be: `distribute: on_event, event: BREAKOUT_ROOMS_CORRECT`
+                # (i.e. send the message when the participants have been put into the breakout rooms
+                #  correctly)
+                distribute:
+                  when: manual
+                  type: broadcast
+    - name: "Activity One: B - Rotation 1"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Breakout Room Organisation
           settings:
-            submissions:
-              - prefix: Strategy
-                name: Strategy 1
-                enabled: false
+            type: transition
+            transition: "Pairs Round Robin"
+    - name: "Activity One: C - Rotation 2"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Breakout Room Organisation
+          settings:
+            type: transition
+            transition: "Pairs Round Robin"
+    - name: "Activity One: D - Discussion"
+      advance:
+        type: manual
+      plugins:
+       - plugin: Breakout Room Organisation
+          settings:
+            type: repeat
+            same_as: "Activity One: A - Read Research Papers"
+       - plugin: Prompt
+         settings:
+           prompts:
+             - name: Activity Reflection
+               content: "Did your message get communicated back to you clearly? If not, what went wrong?
+                 If it did then what ensured this happened?
+                 How can you ensure that the important information sticks with people when you explain something to them?"
+               distribute:
+                 when: manual
+                 type: broadcast
+    - name: "Activity One: E - Discussion"
+      advance:
+        type: manual
+      plugins:
+       - plugin: Prompt
+         settings:
+           prompts:
+             - name: Strategies
+               content: "Did you use any good strategies to ensure your communication was effective?
+                 Did you see anyone else use any strategies to ensure their communication was effective
+                 For each of them, respond to me in the chat by typing: \"Strategy: [the_strategy]\")"
+               # Distribute the prompt into breakout rooms at the start of the script section
+               distribute:
+                 when: start
+                 type: broadcast
+       - plugin: Chat Submission
+         settings:
+           submissions:
+             - prefix: Strategy
+               name: Strategy 1
     - name: "Activity Two: Create Key Strategies"
       advance:
         type: manual
       plugins:
-        - plugin: Chat Submission
-          settings:
-            for_submission: "Strategy"
+        # This plugin will have a UI button: export to Google Doc or something similar, to
+        # export the results - this will require a "create doc" action in the Google Docs plugin
         - plugin: Vote
           settings:
-            currently_voting_for: null
-            polls:
-              - name: Strategy
-                top: 10
-                source: Chat Submission
-        - plugin: Export Vote to Document
-          settings:
-            poll: Strategy
-            output: path/to/vote/results
+            source:
+              plugin: Prompt
+              section: "Activity One: E - Discussion"
+            display:
+              type: top
+              count: 10
+            vote:
+              type: y/n
+        - plugin: Google Docs
     - name: "Activity Three: Watch a video & Critique it"
       advance:
         type: manual
       plugins:
         - plugin: Breakout Room Organisation
           settings:
-            sections:
-              # FIXME: The doc says students get to choose their rooms
-              - type: random
-                participant_count: 6
-                start_hooks:
-                  - name: Send Videos
-                    args:
-                      - - "url/to/video/1"
-                        - "url/to/video/2"
-                        - "url/to/video/3"
-                  - name: Distribute Google Doc
-                    args:
-                      - path/to/vode/results
-                messages:
-                  - minute: 0
-                    content: 'Consider what would you would change about your list?  Submit 3 new specific criteria for their audience (Respond to me in the chat: "Strategy: [the_strategy]")'
+            type: random
+            # The actual doc says "4 - 6 students per room"
+            participant_count: 5
+        - plugin: Prompt
+          settings:
+            prompts:
+              - name: TikTok Video
+                content: Watch this video: [link to video...]
+                distribute:
+                  when: manual
+                  type: room
+             - name: CHI Conference Video
+                content: Watch this video: [link to video...]
+                distribute:
+                  when: manual
+                  type: room
+             - name: Ted Talk Video
+                content: Watch this video: [link to video...]
+                distribute:
+                  when: manual
+                  type: room
+             - name: Criteria Submission
+               content: What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\"
+               distribute:
+                 when: manual
+                 type: broadcast
         - plugin: Chat Submission
           settings:
             submissions:
-              - prefix: Strategy
-                enabled: true
+              - prefix: Criteria
+                name: Criteria 1
     - name: "Activity Four: Create a Plan"
       advance:
         type: manual
       plugins:
-        - plugin: Active Speakers
-        # Not sure about this one yet...
-        - plugin: Active Speakers Prompt
-          settings:
-            prompts:
-              - type: Not Speaking Enough
-                frequency_minutes: 5
-              - type: Not Active Enough in Doc
-                frequency_minutes: 5
-        - plugin: Button
-          settings:
-            on_click:
-              - plugin: Google Docs
-                action:
-                  "Distribute Google Doc": path/to/doc/for/planning
         - plugin: Google Docs
           settings:
             docs:
-              - path/to/doc/for/planning
+             - name: Framework
+               id: [id_of_framework_doc]
+               distribute:
+                 when: manual
+                 type: broadcast
     - name: "Activity Five: Swap plans and critique"
       advance:
         type: manual
       plugins:
-        - plugin: Start Actions
-          settings:
-            actions:
-              - action: Distribute Docs
-                plugin: Google Docs
         - plugin: Google Docs
+          settings:
+            source:
+              type: plugin
+              plugin: Google Docs
+              data: distributed_docs
+              section: "Activity Four: Create a Plan"
+    - name: "Activity Five: Swap plans back"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Google Docs
+          settings:
+            source:
+              type: plugin
+              plugin: Google Docs
+              data: distributed_docs
+              section: "Activity Four: Create a Plan"
     - name: "Activity Six: Record the Intro"
       advance:
         type: manual
       plugins:
-        - plugin: Start Actions
+        - plugin: Chat Submission
           settings:
-            actions:
-              - action: Send Message
-                plugin: Chat
-                args:
-                  - "Write the introduction to your video"
-        - plugin: Active Speakers
-        - plugin: Record
+            submissions:
+             - prefix: Record
+               name: Record
+        - plugin: Breakout Room Recording
+          settings:
+            trigger:
+              on_event:
+                event: CHAT_SUBMITTED
