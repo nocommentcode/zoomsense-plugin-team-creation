@@ -1,0 +1,147 @@
+name: Week 10 Activities Detailed Overview
+tags: []
+schedule:
+  global:
+    # This Plugin Runs a generic/basic Dialog Engine on all chats
+    - plugin: Dialogue
+  script:
+    - name: "Activity One: Round Robin Communication"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Breakout Room Organisation
+          settings:
+            sections:
+              - type: random
+                # Consider: We need to make sure that there are an even number of rooms somehow
+                participant_count: 4
+                start_hooks:
+                  # Distributes all of the google docs for this script section
+                  - name: Distribute Google Docs
+                messages:
+                  - minute: 0
+                    content: Read the abstract and conclusion. You will need to communicate this to other people in 90 seconds
+              - type: transition
+                transition: pairs_rotation
+                start_hooks:
+                  # This sends a message to the groups telling one pair member to explain their document
+                  - name: Pair explain document
+              - type: transition
+                transition: pairs_rotation
+              - type: transition
+                # This puts students back in their original rooms for this script section
+                transition: initial_rooms
+                # This allows us to capture strategies only for this breakout room
+                start_hooks:
+                  - name: Enable Chat Submission
+                messages:
+                  - minute: 0
+                    content: Discuss the activity. Did your message get communicated back to you clearly? If not, what went wrong? If it did then what ensured this happened? How can you ensure that the important information sticks with people when you explain something to them?
+                  # The original doc doesn't say when to do this, so I have set it to 5 mins after previous message
+                  - minute: 5
+                    content: 'What strategies did you use to ensure your communication was effective? (Respond to me in the chat by typing: "Strategy: [the_strategy]")'
+                  - minute: 6
+                    content: 'What was a strategy you saw someone else use to ensure their communication was effective? (Respond to me in the chat: "Strategy: [the_strategy]")'
+        - plugin: Google Docs
+          settings:
+            docs:
+              - id: path/to/research_paper_one
+                name: The Name
+              - path/to/research_paper_two
+        - plugin: Chat Submission
+          settings:
+            submissions:
+              - prefix: Strategy
+                name: Strategy 1
+                enabled: false
+    - name: "Activity Two: Create Key Strategies"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Chat Submission
+          settings:
+            for_submission: "Strategy"
+        - plugin: Vote
+          settings:
+            currently_voting_for: null
+            polls:
+              - name: Strategy
+                top: 10
+                source: Chat Submission
+        - plugin: Export Vote to Document
+          settings:
+            poll: Strategy
+            output: path/to/vote/results
+    - name: "Activity Three: Watch a video & Critique it"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Breakout Room Organisation
+          settings:
+            sections:
+              # FIXME: The doc says students get to choose their rooms
+              - type: random
+                participant_count: 6
+                start_hooks:
+                  - name: Send Videos
+                    args:
+                      - - "url/to/video/1"
+                        - "url/to/video/2"
+                        - "url/to/video/3"
+                  - name: Distribute Google Doc
+                    args:
+                      - path/to/vode/results
+                messages:
+                  - minute: 0
+                    content: 'Consider what would you would change about your list?  Submit 3 new specific criteria for their audience (Respond to me in the chat: "Strategy: [the_strategy]")'
+        - plugin: Chat Submission
+          settings:
+            submissions:
+              - prefix: Strategy
+                enabled: true
+    - name: "Activity Four: Create a Plan"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Active Speakers
+        # Not sure about this one yet...
+        - plugin: Active Speakers Prompt
+          settings:
+            prompts:
+              - type: Not Speaking Enough
+                frequency_minutes: 5
+              - type: Not Active Enough in Doc
+                frequency_minutes: 5
+        - plugin: Button
+          settings:
+            on_click:
+              - plugin: Google Docs
+                action:
+                  "Distribute Google Doc": path/to/doc/for/planning
+        - plugin: Google Docs
+          settings:
+            docs:
+              - path/to/doc/for/planning
+    - name: "Activity Five: Swap plans and critique"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Start Actions
+          settings:
+            actions:
+              - action: Distribute Docs
+                plugin: Google Docs
+        - plugin: Google Docs
+    - name: "Activity Six: Record the Intro"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Start Actions
+          settings:
+            actions:
+              - action: Send Message
+                plugin: Chat
+                args:
+                  - "Write the introduction to your video"
+        - plugin: Active Speakers
+        - plugin: Record
