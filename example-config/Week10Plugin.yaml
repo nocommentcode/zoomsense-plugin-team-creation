@@ -10,15 +10,11 @@ schedule:
       advance:
         type: manual
       plugins:
-        - plugin: Breakout Room Organisation
+        - plugin: Task
           settings:
-            type: random
-            # What will this actually look like? We don't know how many students we will have,
-            # we only know that we need the same number of breakout rooms as we have research
-            # papers
-            room_count: 2
-        - plugin: Prompt
-          settings:
+            breakout rooms:
+              type: random
+              room_count: 2
             prompts:
               - name: Distribute Papers
                 content: Please read the abstract and conclusion of this paper: [Link to paper...]
@@ -35,66 +31,72 @@ schedule:
       advance:
         type: manual
       plugins:
-        - plugin: Breakout Room Organisation
+        - plugin: Task
           settings:
-            type: transition
-            transition: "Pairs Round Robin"
+            breakout rooms:
+              type: transition
+              transition: "Pairs Round Robin"
     - name: "Activity One: C - Rotation 2"
       advance:
         type: manual
       plugins:
-        - plugin: Breakout Room Organisation
+        - plugin: Task
           settings:
-            type: transition
-            transition: "Pairs Round Robin"
+            breakout rooms:
+              type: transition
+              transition: "Pairs Round Robin"
     - name: "Activity One: D - Discussion"
       advance:
         type: manual
       plugins:
-       - plugin: Breakout Room Organisation
+        - plugin: Task
           settings:
-            type: repeat
-            same_as: "Activity One: A - Read Research Papers"
-       - plugin: Prompt
-         settings:
-           prompts:
-             - name: Activity Reflection
-               content: "Did your message get communicated back to you clearly? If not, what went wrong?
-                 If it did then what ensured this happened?
-                 How can you ensure that the important information sticks with people when you explain something to them?"
-               distribute:
-                 when: manual
-                 type: broadcast
+            breakout rooms:
+              type: repeat
+              same_as: "Activity One: A - Read Research Papers"
+            prompts:
+              - name: Activity Reflection
+                content: "Did your message get communicated back to you clearly? If not, what went wrong?
+                  If it did then what ensured this happened?
+                  How can you ensure that the important information sticks with people when you explain something to them?"
+                distribute:
+                  when: manual
+                  type: broadcast
     - name: "Activity One: E - Discussion"
       advance:
         type: manual
       plugins:
-       - plugin: Prompt
-         settings:
-           prompts:
-             - name: Strategies
-               content: "Did you use any good strategies to ensure your communication was effective?
-                 Did you see anyone else use any strategies to ensure their communication was effective
-                 For each of them, respond to me in the chat by typing: \"Strategy: [the_strategy]\")"
-               # Distribute the prompt into breakout rooms at the start of the script section
-               distribute:
-                 when: start
-                 type: broadcast
-       - plugin: Chat Submission
-         settings:
-           submissions:
-             - prefix: Strategy
-               name: Strategy 1
+        - plugin: Task
+          settings:
+            prompts:
+              - name: Strategies
+                content: "Did you use any good strategies to ensure your communication was effective?
+                  Did you see anyone else use any strategies to ensure their communication was effective
+                  For each of them, respond to me in the chat by typing: \"Strategy: [the_strategy]\")"
+                # Distribute the prompt into breakout rooms at the start of the script section
+                distribute:
+                  when: start
+                  type: broadcast
+         - plugin: Chat Submission
+           settings:
+             submissions:
+               - prefix: Strategy
+                 name: Strategy 1
     - name: "Activity Two: Create Key Strategies"
       advance:
         type: manual
       plugins:
+        - plugin: Task
+          settings:
+            breakout rooms:
+              type: main room
         # This plugin will have a UI button: export to Google Doc or something similar, to
         # export the results - this will require a "create doc" action in the Google Docs plugin
         - plugin: Vote
           settings:
             source:
-              plugin: Prompt
+              # This needs more thought
+              plugin: Task
               section: "Activity One: E - Discussion"
             display:
               type: top
@@ -106,34 +108,32 @@ schedule:
       advance:
         type: manual
       plugins:
-        - plugin: Breakout Room Organisation
+        - plugin: Task
           settings:
-            type: random
-            # The actual doc says "4 - 6 students per room"
-            participant_count: 5
-        - plugin: Prompt
-          settings:
+            breakout rooms:
+              type: random
+              participants: 5
             prompts:
-              - name: TikTok Video
-                content: Watch this video: [link to video...]
+               - name: TikTok Video
+                 content: Watch this video: [link to video...]
+                 distribute:
+                   when: manual
+                   type: room
+              - name: CHI Conference Video
+                 content: Watch this video: [link to video...]
+                 distribute:
+                   when: manual
+                   type: room
+              - name: Ted Talk Video
+                 content: Watch this video: [link to video...]
+                 distribute:
+                   when: manual
+                   type: room
+              - name: Criteria Submission
+                content: What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\"
                 distribute:
                   when: manual
-                  type: room
-             - name: CHI Conference Video
-                content: Watch this video: [link to video...]
-                distribute:
-                  when: manual
-                  type: room
-             - name: Ted Talk Video
-                content: Watch this video: [link to video...]
-                distribute:
-                  when: manual
-                  type: room
-             - name: Criteria Submission
-               content: What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\"
-               distribute:
-                 when: manual
-                 type: broadcast
+                  type: broadcast
         - plugin: Chat Submission
           settings:
             submissions:
@@ -182,7 +182,7 @@ schedule:
             submissions:
              - prefix: Record
                name: Record
-        - plugin: Breakout Room Recording
+        - plugin: Task
           settings:
             trigger:
               on_event:
