@@ -17,7 +17,7 @@ schedule:
               room_count: 2
             prompts:
               - name: Distribute Papers
-                content: Please read the abstract and conclusion of this paper: [Link to paper...]
+                content: "Please read the abstract and conclusion of this paper: [Link to paper...]"
                 # The teacher will click the button in the UI to distribute the papers once the
                 # students have settled into their breakout rooms.
                 #
@@ -77,11 +77,11 @@ schedule:
                 distribute:
                   when: start
                   type: broadcast
-         - plugin: Chat Submission
-           settings:
-             submissions:
-               - prefix: Strategy
-                 name: Strategy 1
+        - plugin: Chat Submission
+          settings:
+            submissions:
+              - prefix: Strategy
+                name: Strategy 1
     - name: "Activity Two: Create Key Strategies"
       advance:
         type: manual
@@ -114,23 +114,23 @@ schedule:
               type: random
               participants: 5
             prompts:
-               - name: TikTok Video
-                 content: Watch this video: [link to video...]
-                 distribute:
-                   when: manual
-                   type: room
+              - name: TikTok Video
+                content: "Watch this video: [link to video...]"
+                distribute:
+                  when: manual
+                  type: room
               - name: CHI Conference Video
-                 content: Watch this video: [link to video...]
-                 distribute:
-                   when: manual
-                   type: room
+                content: "Watch this video: [link to video...]"
+                distribute:
+                  when: manual
+                  type: room
               - name: Ted Talk Video
-                 content: Watch this video: [link to video...]
-                 distribute:
-                   when: manual
-                   type: room
+                content: "Watch this video: [link to video...]"
+                distribute:
+                  when: manual
+                  type: room
               - name: Criteria Submission
-                content: What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\"
+                content: "What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\""
                 distribute:
                   when: manual
                   type: broadcast
