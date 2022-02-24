@@ -15,7 +15,7 @@ schedule:
             breakout rooms:
               type: random
               room_count: 2
-            prompts:
+            messages:
               - name: Distribute Papers
                 content: "Please read the abstract and conclusion of this paper: [Link to paper...]"
                 # The teacher will click the button in the UI to distribute the papers once the
@@ -24,8 +24,9 @@ schedule:
                 # The alternative here might be: `distribute: on_event, event: BREAKOUT_ROOMS_CORRECT`
                 # (i.e. send the message when the participants have been put into the breakout rooms
                 #  correctly)
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: broadcast
     - name: "Activity One: B - Rotation 1"
       advance:
@@ -54,13 +55,14 @@ schedule:
             breakout rooms:
               type: repeat
               same_as: "Activity One: A - Read Research Papers"
-            prompts:
+            messages:
               - name: Activity Reflection
                 content: "Did your message get communicated back to you clearly? If not, what went wrong?
                   If it did then what ensured this happened?
                   How can you ensure that the important information sticks with people when you explain something to them?"
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: broadcast
     - name: "Activity One: E - Discussion"
       advance:
@@ -68,14 +70,15 @@ schedule:
       plugins:
         - plugin: Task
           settings:
-            prompts:
+            messages:
               - name: Strategies
                 content: "Did you use any good strategies to ensure your communication was effective?
                   Did you see anyone else use any strategies to ensure their communication was effective
                   For each of them, respond to me in the chat by typing: \"Strategy: [the_strategy]\")"
                 # Distribute the prompt into breakout rooms at the start of the script section
-                distribute:
-                  when: start
+                config:
+                  from: start
+                  time: 0 minutes
                   type: broadcast
         - plugin: Chat Submission
           settings:
@@ -113,26 +116,30 @@ schedule:
             breakout rooms:
               type: random
               participants: 5
-            prompts:
+            messages:
               - name: TikTok Video
                 content: "Watch this video: [link to video...]"
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: room
               - name: CHI Conference Video
                 content: "Watch this video: [link to video...]"
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: room
               - name: Ted Talk Video
                 content: "Watch this video: [link to video...]"
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: room
               - name: Criteria Submission
                 content: "What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\""
-                distribute:
-                  when: manual
+                config:
+                  from: end
+                  time: 5 minutes
                   type: broadcast
         - plugin: Chat Submission
           settings:
