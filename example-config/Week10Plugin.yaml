@@ -25,28 +25,64 @@ schedule:
                 # (i.e. send the message when the participants have been put into the breakout rooms
                 #  correctly)
                 config:
-                  from: end
-                  time: 5 minutes
-                  type: broadcast
+                  from: manual
+                  type: room
+                  room: ZoomSensor_1
     - name: "Activity One: B - Rotation 1"
       advance:
-        type: manual
+        type: timed
+        when: 120 seconds
       plugins:
         - plugin: Task
           settings:
+            messages:
+              - name: Instructions
+                content: "If you came from Group A or B, explain to your partner what your thesis is about!"
+                config:
+                  from: start
+                  time: 10 seconds
+                  type: broadcast
             breakout rooms:
               type: transition
               transition: "Pairs Round Robin"
     - name: "Activity One: C - Rotation 2"
       advance:
-        type: manual
+        type: timed
+        when: 90 seconds
+      plugins:
+        - plugin: Task
+          settings:
+            messages:
+              - name: "Instructions"
+                content: "If you listened to somebody's abstract in the last rotation, explain it to your new partner now"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: Broadcast
+            breakout rooms:
+              type: transition
+              transition: "Pairs Round Robin"
+    - name: "Activity One: D - Rotation 3"
+      advance:
+        type: timed
+        when: 90 seconds
       plugins:
         - plugin: Task
           settings:
             breakout rooms:
               type: transition
               transition: "Pairs Round Robin"
-    - name: "Activity One: D - Discussion"
+    - name: "Activity One: E - Rotation 4"
+      advance:
+        type: timed
+        when: 90 seconds
+      plugins:
+        - plugin: Task
+          settings:
+            breakout rooms:
+              type: transition
+              transition: "Pairs Round Robin"
+    - name: "Activity One: F - Discussion"
       advance:
         type: manual
       plugins:
@@ -57,14 +93,43 @@ schedule:
               same_as: "Activity One: A - Read Research Papers"
             messages:
               - name: Activity Reflection
-                content: "Did your message get communicated back to you clearly? If not, what went wrong?
+                content:
+                  "Did your message get communicated back to you clearly? If not, what went wrong?
                   If it did then what ensured this happened?
                   How can you ensure that the important information sticks with people when you explain something to them?"
                 config:
                   from: end
                   time: 5 minutes
                   type: broadcast
-    - name: "Activity One: E - Discussion"
+    - name: "Activity One: F - Discussion"
+      advance:
+        type: manual
+      plugins:
+        - plugin: Task
+          settings:
+            breakout rooms:
+              type: repeat
+              same_as: "Activity One: A - Read Research Papers"
+            messages:
+              - name: Activity Reflection
+                content:
+                  "Did your message get communicated back to you clearly? If not, what went wrong?
+                  If it did then what ensured this happened?
+                  How can you ensure that the important information sticks with people when you explain something to them?"
+                config:
+                  from: end
+                  time: 5 minutes
+                  type: broadcast"
+              - name: Activity Reflection
+                content:
+                  "Did your message get communicated back to you clearly? If not, what went wrong?
+                  If it did then what ensured this happened?
+                  How can you ensure that the important information sticks with people when you explain something to them?"
+                config:
+                  from: end
+                  time: 5 minutes
+                  type: broadcast
+    - name: "Activity One: G - Discussion"
       advance:
         type: manual
       plugins:
@@ -72,9 +137,10 @@ schedule:
           settings:
             messages:
               - name: Strategies
-                content: "Did you use any good strategies to ensure your communication was effective?
+                content:
+                  'Did you use any good strategies to ensure your communication was effective?
                   Did you see anyone else use any strategies to ensure their communication was effective
-                  For each of them, respond to me in the chat by typing: \"Strategy: [the_strategy]\")"
+                  For each of them, respond to me in the chat by typing: "Strategy: [the_strategy]")'
                 # Distribute the prompt into breakout rooms at the start of the script section
                 config:
                   from: start
@@ -84,7 +150,7 @@ schedule:
           settings:
             submissions:
               - prefix: Strategy
-                name: Strategy 1
+                name: Strategy 2
     - name: "Activity Two: Create Key Strategies"
       advance:
         type: manual
@@ -97,15 +163,10 @@ schedule:
         # export the results - this will require a "create doc" action in the Google Docs plugin
         - plugin: Vote
           settings:
-            source:
-              # This needs more thought
-              plugin: Task
-              section: "Activity One: E - Discussion"
-            display:
-              type: top
-              count: 10
-            vote:
-              type: y/n
+            submissionName: Strategy 1
+            type: yes-no
+            canChangeVote: true
+            voteTypeName: strategy/strategies
         - plugin: Google Docs
     - name: "Activity Three: Watch a video & Critique it"
       advance:
@@ -136,7 +197,7 @@ schedule:
                   time: 5 minutes
                   type: room
               - name: Criteria Submission
-                content: "What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: \"Criteria: [the_criteria]\""
+                content: 'What would you change about your list? Submit 3 criteria (one by one) by responding to me in the chat, typing: "Criteria: [the_criteria]"'
                 config:
                   from: end
                   time: 5 minutes
@@ -153,44 +214,83 @@ schedule:
         - plugin: Google Docs
           settings:
             docs:
-             - name: Framework
-               id: [id_of_framework_doc]
-               distribute:
-                 when: manual
-                 type: broadcast
+              - name: Framework
+                id: [id_of_framework_doc]
+                distribute:
+                  when: manual
+                  type: broadcast
     - name: "Activity Five: Swap plans and critique"
       advance:
         type: manual
       plugins:
-        - plugin: Google Docs
+        - plugin: Task
           settings:
-            source:
-              type: plugin
-              plugin: Google Docs
-              data: distributed_docs
-              section: "Activity Four: Create a Plan"
+            messages:
+              - name: Doc 1
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_1
+              - name: Doc 2
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_2
+              - name: Doc 3
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_3
+              - name: Doc 4
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_4
     - name: "Activity Five: Swap plans back"
       advance:
         type: manual
       plugins:
-        - plugin: Google Docs
+        - plugin: Task
           settings:
-            source:
-              type: plugin
-              plugin: Google Docs
-              data: distributed_docs
-              section: "Activity Four: Create a Plan"
+            messages:
+              - name: Doc 1
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_4
+              - name: Doc 2
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_1
+              - name: Doc 3
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_2
+              - name: Doc 4
+                content: "Link to doc!"
+                config:
+                  from: start
+                  time: 0 minutes
+                  type: room
+                  room: ZoomSensor_3
     - name: "Activity Six: Record the Intro"
       advance:
         type: manual
       plugins:
-        - plugin: Chat Submission
-          settings:
-            submissions:
-             - prefix: Record
-               name: Record
-        - plugin: Task
-          settings:
-            trigger:
-              on_event:
-                event: CHAT_SUBMITTED
+        - plugin: Record
