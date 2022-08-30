@@ -31,7 +31,7 @@ export const currentBORooms = (entryExit) => {
       });
 
       return [
-        index,
+        `team_${index}`,
         {
           members: Array.from(usersInRoom).map((userName) => ({
             ...allUsers[userName],
