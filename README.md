@@ -1,8 +1,20 @@
-# Zoomsense Plugin Example
+# Zoomsense Team Creation Plugin
 
-- Functions folder has the firebase functions in
+This plugin will save the current breakout room assignments as teams.
+It will store the following data for each breakout room:
 
-- App folder has the UI controls in (vue-cli-service build --target lib src/library.js) to generate output files into the dist dir (notes for CI)
+- isInBO: whether the team is in a breakout room or the main room
+- sensorId: the id of the zoombot sensor in that breakout room
+- teamName: a string in the form 'Team n' where n is a counter
+- members: an array of members, each member stores the memberId, userId, userName and userRole.
 
-- package.json has metadata on the plugin in
+The admin can set the teams by pressing the 'Assign to teams' button in the dashboard.
+This will then display the arrangement of the teams that was saved.
+The admin can overrride the teams by pressing the button again, this will delete the previous team configuation and save the new one
 
+## configuation
+
+Simply add this plugin at the top of your configuration file to enable it:
+eg:
+
+- plugin: teamPlugin

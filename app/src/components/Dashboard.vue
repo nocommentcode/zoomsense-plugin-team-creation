@@ -16,23 +16,26 @@
         <div>{{ this.error }}</div>
       </div>
 
-      <div v-if="teams !== null" v-for="team in teams" class="team">
-        <div class="teamName">{{ team.teamName }}</div>
-        <q-list bordered separator>
-          <q-item
-            clickable
-            v-ripple
-            :active="active"
-            v-for="member in team.members"
-          >
-            <q-item-section>{{ member.username }}</q-item-section>
-            <q-item-section side>{{ member.userRole }}</q-item-section>
-          </q-item>
-          <q-item clickable v-ripple :active="active">
-            <q-item-section>{{ team.sensorId }}</q-item-section>
-            <q-item-section side>ZoomSense Bot</q-item-section>
-          </q-item>
-        </q-list>
+      <div v-if="teams !== null">
+        <div v-for="team in teams" :key="team.teamName" class="team">
+          <div class="teamName">{{ team.teamName }}</div>
+          <q-list bordered separator>
+            <q-item
+              clickable
+              v-ripple
+              :active="active"
+              v-for="member in team.members"
+              :key="member.userId"
+            >
+              <q-item-section>{{ member.username }}</q-item-section>
+              <q-item-section side>{{ member.userRole }}</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple :active="active">
+              <q-item-section>{{ team.sensorId }}</q-item-section>
+              <q-item-section side>ZoomSense Bot</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
       </div>
     </div>
   </div>
@@ -65,12 +68,16 @@ export default {
   methods: {
     async createTeams() {
       this.loading = true;
+      // try save teams
       saveBreakoutRoomsAsTeams(this.context.meetingid, this.firebase)
+        // successs -> stop loading, save teams and set error to null
         .then((result) => {
           this.error = null;
           this.teams = result;
           this.loading = false;
         })
+
+        // error -> stop loading and show error
         .catch((error) => {
           this.loading = false;
 

@@ -13,13 +13,15 @@
   "author": "ZoomSense",
   "license": "MIT",
   "zoomsense": {
-    "displayname": "",
+    "displayname": "zoomsense-plugin-team-creation",
+    "description": "A ZoomSense plugin to facilitate creating teams based on the current state of breakout rooms",
     "requires": {
       "sensor": "1.0",
       "functions": "1.0",
       "plugins": {
         "UIDisplauy": "1.0"
-      }
+      },
+      "icon": "group"
     }
   }
 }
